@@ -1,0 +1,89 @@
+C_LIBS_PATH = $(topdir)
+
+SEL_OBJ = *.o
+FITSOBJ = cfitsio/$(SEL_OBJ)
+IRAFOBJ = 
+MIDASOBJ = 
+MIDAS_INC =
+#MIDASOBJ = midas_io/obj/$(SEL_OBJ)
+#MIDAS_INC = $(topdir)/C_libs/io/midas_io
+
+3DOBJ = 3D_io/obj/$(SEL_OBJ)
+
+INC =  $(C_LIBS_PATH)/incl
+USER_INC = ../incl
+LIB_INC = $(INC)/gendef.h $(INC)/items.h $(INC)/IFU_datatypes.h $(INC)/iofuncdecl.h $(INC)/funcdecl.h $(INC)/macro.h $(INC)/3D_items.h $(INC)/3D_iofunc.h $(INC)/funcdef.h $(INC)/compat.h $(INC)/cplx_items.h $(INC)/cplx_iofunc.h
+STAND_INC = $(INC)/IFU_io.h
+
+LEXOUTPUT = y.tab.o
+
+CYACC_OUTPUT = y.tab.c
+OYACC_OUTPUT = y.tab.o
+
+CFLAGS = -I$(topdir) -I$(INC) -I$(USER_INC) -I$(MIDAS_INC) -DSYSV -Dlocal
+FFLAGS = $(F_OPT) -I$(INC) -I$(USER_INC) -I$(LOCAL_INC)
+RANLIB = ranlib
+
+GENLIB = $(C_LIBS_PATH)/obj/libgen.a
+IOLIB = $(C_LIBS_PATH)/obj/libio.a $(GENLIB)
+
+# used by ld:
+ADD_LIBS = -lc -lm -lwcs -lcfitsio # --entry main
+LD = $(CC)
+
+E = ../exec
+O = ../obj
+
+OBJ = $(O)/*.o
+EXE =
+
+C_COMPILE = $(CC) $(DEBUG) $(C_OPT) $(CFLAGS) -c $(@F:.o=.c) -o $@
+F_COMPILE = $(F77) $(DEBUG) $(FFLAGS) -c $(@F:.o=.f) -o $@
+
+STRIP = strip
+
+.SUFFIXES: .o .c .for .h .l .y
+
+$(O)/%.o : %.c $(STAND_INC)
+	$(C_COMPILE)
+
+$(O)/%.o : %.f 
+	$(F_COMPILE)
+
+all: OUT
+
+$(STAND_INC) : $(LIB_INC)
+	touch $(STAND_INC)
+
+dirobj :
+	@ if [ ! -d $(O) ]; then (mkdir -p $(O);) fi      
+
+dirbin :
+	@ if [ ! -d $(E) ]; then (mkdir -p $(E);) fi      
+
+clean :
+	$(RM) $(LIB) $(EXE) $(OBJ)
+
+distdir :
+	@for file in `ls -t`; do \
+        if test -d $$file ; then continue; fi; \
+        if file $$file | grep -i executable >> /dev/null; then \
+                continue; \
+        fi; \
+        if file $$file | grep -i object >> /dev/null; then \
+                continue; \
+        fi; \
+        if file $$file | grep -i relocatable >> /dev/null; then \
+                continue; \
+        fi; \
+        cp $$file $$distdir/$$file;  \
+        done                                      
+
+dvi :
+	@for file in `ls`; do \
+        if test -d $$file ; then continue; fi; \
+	if file $$file | grep -i "C program" >> /dev/null; then \
+                $(topdir)/util/exec/doc_tex $$file $(topdir)/doc/QuickRef >> /dev/null; \
+	fi; \
+	done
+

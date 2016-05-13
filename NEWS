@@ -1,0 +1,26 @@
+6.0
+
+** added GNU software compliant files
+** now handle hierarchical keywords
+** added tcl wrapper to I/O routines
+** added python wrapper to I/O routines
+** version number set by autoconf
+** added wcslib-3.6
+
+6.1
+
+** updated cfitsio version to 2.5
+
+6.1a
+
+** configure now admits --enable-midas or --disable-midas options
+** added function last_char_before
+
+6.3
+
+** added functions open_anyfile and close_anyfile
+** configure now admits --disable-wrappers (default is wrappers building enable)
+** configure now admits --enable-static-link (default is no)
+** added new 2D complex image type stored as two FITS extensions
+** added routines for julian date handling
+

@@ -1,0 +1,5 @@
+SOURCE FILES of /lib/gen directory :
+
+- dyn_alloc.c  : set of macros handling 2D arrays dynamic allocations
+- strings.c    : set of macros handling strings
+- files.c      : set of macros handling files
