@@ -13,7 +13,9 @@ this was stripped on importing the code to git.
 
 **License:** GPLv2
 
-Installation
-============
+Build
+=====
 
-TODO
+Type `make`. Static libraries `libio.a` and `libgen.a` will be located in
+`obj` subdirectory.
+
